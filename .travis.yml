@@ -25,5 +25,5 @@ install:
 
 script:
   - export PATH=$PATH:.
-  - tests/tests_role_unit
-  - tests/tests_role_unit_debian9
+  - tests/bash_unit tests/tests_role_unit
+  - tests/bash_unit tests/tests_role_unit_debian9
