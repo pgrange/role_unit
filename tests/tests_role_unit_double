@@ -1,0 +1,15 @@
+#!/usr/bin/env bash_unit
+
+RU_COUNT=2
+
+. lib/role_unit
+
+test_i_have_two_containers() {
+  assert_equals "2" "$(ru_run hostname | wc -l)"
+}
+
+setup_suite() {
+  ru_init
+}
+
+# vim: syntax=sh

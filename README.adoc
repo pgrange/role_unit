@@ -49,6 +49,7 @@ Returns the specified ansible fact for all of the servers or just on the one spe
 Plumb_unit behaviour can be changed using environment variables:
 * RU_ENV_NAME defines the testing environment name. It is the name of the role you will test.
 * RU_ENV_IMAGE defines the system image used to create test environment.
+* RU_COUNT sets the number of containers or virtual machines
 
 == tests
 

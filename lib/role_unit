@@ -9,6 +9,7 @@ ru_count=1
 
 [ -n "$RU_ENV_NAME" ] && ru_env_name="$RU_ENV_NAME"
 [ -n "$RU_ENV_IMAGE" ] && ru_env_image="$RU_ENV_IMAGE"
+[ -n "$RU_COUNT" ] && ru_count="$RU_COUNT"
 
 ### Global functions
 
