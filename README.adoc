@@ -54,4 +54,4 @@ Role_unit is tested with role_unit, so preprequisites are the same.
 
 to run the tests, you will have to launch:
 
- tests/tests_role_unit
+ tests/bash_unit tests/tests*
