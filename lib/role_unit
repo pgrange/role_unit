@@ -47,8 +47,6 @@ ru_ansible_init() {
   mkdir -p roles
   [ ! -L roles/${ru_env_name} ] && ln -s ../.. roles/${ru_env_name}
   mkdir -p /tmp/ansible
-  echo "[${ru_env_name}]" > /tmp/ansible/inventory
-  ru_servers >> /tmp/ansible/inventory
   cat > /tmp/ansible/playbook.yml << EOF
 - hosts: ${ru_env_name}
   roles:
@@ -61,10 +59,10 @@ ru_run_ansible() {
 }
 
 ru_ansible_facts() {
-  local ru_servers=$(ru_servers)
-  [ "$1" == "-n" ] && ru_servers=$(ru_server $2) && shift 2
-  ru_servers=$(echo -e "${ru_servers}" | tr "\n" ",")
-  ansible -i /tmp/ansible/inventory --connection=${ru_env_cnx} ${ru_servers} -m setup
+  local ru_server_names=$(ru_server_names)
+  [ "$1" == "-n" ] && ru_server_names=$(ru_server_name $2) && shift 2
+  ru_server_names=$(echo -e "${ru_server_names}" | tr "\n" ",")
+  ansible -i /tmp/ansible/inventory --connection=${ru_env_cnx} ${ru_server_names} -m setup
 }
 
 ru_ansible_fact() {

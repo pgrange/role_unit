@@ -1,11 +1,14 @@
 ru_env_cnx="docker"
 
+declare -A ru_servers_names
+
 ru_destroy() {
   local ru_server
   for ru_server in $(ru_servers)
   do
+    local ru_server_name=${ru_servers_names[${ru_server}]}
     ru_info stopping container ${ru_server}
-    docker rm -f ${ru_server} >/dev/null 2>&1
+    docker rm -f ${ru_server_name} >/dev/null 2>&1
   done
 }
 
@@ -15,10 +18,17 @@ ru_init() {
   docker pull ${ru_env_image} >/dev/null 2>&1
   for ru_server in $(ru_servers)
   do
+    local ru_server_name=$(uuidgen)
     ru_info starting container ${ru_server}
-    docker run -d --name=${ru_server} --hostname=${ru_server} ${ru_env_image} /sbin/init >/dev/null 2>&1
+    docker run -d --name=${ru_server_name} --hostname=${ru_server_name} ${ru_env_image} /sbin/init >/dev/null 2>&1
+    ru_servers_names[${ru_server}]=${ru_server_name}
   done
   trap "ru_destroy" EXIT
+  mkdir -p /tmp/ansible
+  echo "[${ru_env_name}]" > /tmp/ansible/inventory
+  for ru_server in $(ru_servers) ; do
+    echo ${ru_servers_names[${ru_server}]}
+  done >> /tmp/ansible/inventory
   ru_ansible_init
 }
 
@@ -27,7 +37,19 @@ ru_run() {
   [ "$1" == "-n" ] && ru_servers=$(ru_server $2) && shift 2
   for ru_server in ${ru_servers}
   do
-    docker exec -i ${ru_server} "$@"
+    local ru_server_name=${ru_servers_names[${ru_server}]}
+    docker exec -i ${ru_server_name} "$@"
+  done
+}
+
+ru_server_name() {
+  local ru_server=$(ru_server $1)
+  echo ${ru_servers_names[${ru_server}]}
+}
+
+ru_server_names() {
+  for ru_server in $(ru_servers) ; do
+    echo ${ru_servers_names[${ru_server}]}
   done
 }
 
