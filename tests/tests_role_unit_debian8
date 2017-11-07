@@ -3,9 +3,9 @@
 RU_ENV_IMAGE="multimediabs/plumb_unit:debian_stretch"
 . lib/role_unit
 
-test_environment_is_docker_container_running_debian_9() {
+test_environment_is_docker_container_running_debian_8() {
   assert_equals "Debian" "$(ru_ansible_fact ansible_distribution)"
-  assert_equals "9" "$(ru_ansible_fact ansible_distribution_major_version)"
+  assert_equals "8" "$(ru_ansible_fact ansible_distribution_major_version)"
   assert_equals "docker" "$(ru_ansible_fact ansible_virtualization_type)"
 }
 
@@ -13,8 +13,5 @@ setup_suite() {
   ru_init
   ru_run_ansible
 }
-
-#teardown_suite() {
-#}
 
 # vim: syntax=sh

@@ -2,7 +2,7 @@
 
 ru_env_name="role_unit"
 ru_env_type="docker"
-ru_env_image="multimediabs/plumb_unit:debian_jessie"
+ru_env_image="multimediabs/plumb_unit:debian_stretch"
 ru_count=1
 
 ### User environment
