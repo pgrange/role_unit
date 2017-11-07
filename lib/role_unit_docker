@@ -18,7 +18,9 @@ ru_init() {
   docker pull ${ru_env_image} >/dev/null 2>&1
   for ru_server in $(ru_servers)
   do
-    local ru_server_name=$(uuidgen)
+    local ru_server_name="${pu_env_name}_$(date +%s)"
+    which uuidgen >/dev/null 2>&1 && ru_server_name=$(uuidgen)
+    which uuid >/dev/null 2>&1 && ru_server_name=$(uuid)
     ru_info starting container ${ru_server}
     docker run -d --name=${ru_server_name} --hostname=${ru_server_name} ${ru_env_image} /sbin/init >/dev/null 2>&1
     ru_servers_names[${ru_server}]=${ru_server_name}
