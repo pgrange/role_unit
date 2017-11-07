@@ -13,10 +13,16 @@ The goal of this project is to test your ansible system automation. Its goal is 
 
 == usage
 
-Tests files are regular bash_unit tests files. Only specifics is that you need to souce ru_lib at the begining of your test file:
- . lib/ru_lib
+To create a new role tested with role_unit, place yourself in the directory where you want the role and run role_unit:
 
-You then have a list of functions you can call in your test file, described below.
+----
+cd /my/ansible/dir/roles
+/path/to/role_unit my_role
+----
+
+This will create an empty role with the testing tools in the tests directory. A default tests file is created that run on the default container (debian9). To adapt the used distribution set the RU_ENV_IMAGE variable (see below).
+
+You have a list of functions you can call in your test file, described below.
 
 === ru_init
 

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash_unit
+
+. lib/role_unit
+
+test_that_fails() {
+  assert "ru_run true"
+}
+
+setup_suite() {
+  ru_init
+  ru_run_ansible
+}
+
+# vim: syntax=sh
