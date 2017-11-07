@@ -11,6 +11,7 @@ addons:
   apt:
     packages:
     - python-pip
+    - expect
 
 install:
   - pip install ansible
@@ -25,5 +26,5 @@ install:
 
 script:
   - export PATH=$PATH:.
-  - tests/bash_unit tests/tests_role_unit
-  - tests/bash_unit tests/tests_role_unit_debian9
+  - unbuffer tests/bash_unit tests/tests_role_unit
+  - unbuffer tests/bash_unit tests/tests_role_unit_debian9
