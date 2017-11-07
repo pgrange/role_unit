@@ -1,6 +1,6 @@
 #!/usr/bin/env bash_unit
 
-RU_ENV_IMAGE="multimediabs/plumb_unit:debian_stretch"
+RU_ENV_IMAGE="multimediabs/plumb_unit:debian_jessie"
 . lib/role_unit
 
 test_environment_is_docker_container_running_debian_8() {
