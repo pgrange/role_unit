@@ -1,0 +1,34 @@
+ru_env_cnx="docker"
+
+ru_destroy() {
+  local ru_server
+  for ru_server in $(ru_servers)
+  do
+    ru_info stopping container ${ru_server}
+    docker rm -f ${ru_server} >/dev/null 2>&1
+  done
+}
+
+ru_init() {
+  local ru_server
+  ru_info pulling docker image
+  docker pull ${ru_env_image} >/dev/null 2>&1
+  for ru_server in $(ru_servers)
+  do
+    ru_info starting container ${ru_server}
+    docker run -d --name=${ru_server} --hostname=${ru_server} ${ru_env_image} /sbin/init >/dev/null 2>&1
+  done
+  trap "ru_destroy" EXIT
+  ru_ansible_init
+}
+
+ru_run() {
+  local ru_servers=$(ru_servers)
+  [ "$1" == "-n" ] && ru_servers=$(ru_server $2) && shift 2
+  for ru_server in ${ru_servers}
+  do
+    docker exec -i ${ru_server} "$@"
+  done
+}
+
+# vim: syntax=sh

@@ -1,0 +1,28 @@
+---
+language: python
+python: "2.7"
+
+sudo: required
+
+services:
+  - docker
+
+addons:
+  apt:
+    packages:
+    - python-pip
+
+install:
+  - pip install ansible
+  - ansible --version
+  - docker pull multimediabs/plumb_unit:centos6
+  - docker pull multimediabs/plumb_unit:centos7
+  - docker pull multimediabs/plumb_unit:debian_jessie
+  - docker pull multimediabs/plumb_unit:debian_wheezy
+  - docker pull multimediabs/plumb_unit:debian_stretch
+  - docker pull multimediabs/plumb_unit:archlinux
+
+script:
+  - export PATH=$PATH:.
+  - tests/tests_role_unit
+  - tests/tests_role_unit_debian9

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash_unit
+
+. lib/role_unit
+
+test_i_have_a_container() {
+  local server_name=$(ru_servers | head -1)
+  assert_equals "${server_name}" "$(ru_run hostname 2>&1)"
+}
+
+test_i_can_make_an_ansible_run_over_my_containers() {
+  ru_run_ansible
+}
+
+test_default_environment_is_docker_container_running_debian_8() {
+  assert_equals "Debian" "$(ru_ansible_fact ansible_distribution)"
+  assert_equals "8" "$(ru_ansible_fact ansible_distribution_major_version)"
+  assert_equals "docker" "$(ru_ansible_fact ansible_virtualization_type)"
+}
+
+setup_suite() {
+  ru_init
+  ru_run_ansible
+}
+
+#teardown_suite() {
+#}
+
+# vim: syntax=sh

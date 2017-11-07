@@ -1,0 +1,57 @@
+Build status :
+image:https://travis-ci.org/n0vember/role_unit.svg?branch=master[Build Status,link=https://travis-ci.org/n0vember/role_unit]
+
+= role_unit
+
+The goal of this project is to test your ansible system automation. Its goal is basically to test ansible roles, but role_unit's own tests are an example of an other usage that can be made.
+
+== prerequisites
+
+* bash_unit
+* docker
+* ansible
+
+== usage
+
+Tests files are regular bash_unit tests files. Only specifics is that you need to souce ru_lib at the begining of your test file:
+ . lib/ru_lib
+
+You then have a list of functions you can call in your test file, described below.
+
+=== ru_init
+
+Initiates testing environment, i.e. creates containers or virtual machines depending on configuration.
+
+=== ru_ansible_init
+
+Initiates ansible inventory and playbook necessary to test your ansible role.
+
+=== ru_run_ansible
+
+Actually run ansible-playbook on your testing environment.
+
+=== ru_run [ -n N ] cmd ...
+
+Runs the specified command on all of the servers or just on the one specified. N is the number of the server you want to run the command on.
+
+=== ru_ansible_fact [ -n N ] fact_name...
+
+Returns the specified ansible fact for all of the servers or just on the one specified. N is the number of the server you want to get the fact from.
+
+== parameters
+
+Plumb_unit behaviour can be changed using environment variables:
+* RU_ENV_NAME defines the testing environment name. It is the name of the role you will test.
+* RU_ENV_IMAGE defines the system image used to create test environment.
+
+== tests
+
+=== prerequisites
+
+Role_unit is tested with role_unit, so preprequisites are the same.
+
+=== run
+
+to run the tests, you will have to launch:
+
+ tests/tests_role_unit

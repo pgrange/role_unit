@@ -1,0 +1,80 @@
+### Default environment
+
+ru_env_name="role_unit"
+ru_env_type="docker"
+ru_env_image="multimediabs/plumb_unit:debian_jessie"
+ru_count=1
+
+### User environment
+
+[ -n "$RU_ENV_NAME" ] && ru_env_name="$RU_ENV_NAME"
+[ -n "$RU_ENV_IMAGE" ] && ru_env_image="$RU_ENV_IMAGE"
+
+### Global functions
+
+ru_info() {
+  local txtcyn='\e[0;36m' # cyan text
+  local txtrst='\e[0m'    # text reset
+  printf "${txtcyn}"
+  echo -n "$@"
+  printf "${txtrst}"
+  echo
+}
+
+ru_usage() {
+  echo "Nope." >&2
+}
+
+### Servers management functions
+
+ru_server() {
+  local ru_num=$(printf "%02d" $1)
+  echo ru_${ru_env_name}_${ru_num}
+}
+
+ru_servers() {
+  local ru_num
+  for ru_num in $(seq -w 00 $((ru_count-1)))
+  do
+    ru_server ${ru_num}
+  done
+}
+
+### Ansible management functions
+
+ru_ansible_init() {
+  mkdir -p roles
+  [ ! -L roles/${ru_env_name} ] && ln -s ../.. roles/${ru_env_name}
+  mkdir -p /tmp/ansible
+  echo "[${ru_env_name}]" > /tmp/ansible/inventory
+  ru_servers >> /tmp/ansible/inventory
+  cat > /tmp/ansible/playbook.yml << EOF
+- hosts: ${ru_env_name}
+  roles:
+    - ${ru_env_name}
+EOF
+}
+
+ru_run_ansible() {
+  assert "ansible-playbook --verbose --diff -i /tmp/ansible/inventory --connection=${ru_env_cnx} /tmp/ansible/playbook.yml"
+}
+
+ru_ansible_facts() {
+  local ru_servers=$(ru_servers)
+  [ "$1" == "-n" ] && ru_servers=$(ru_server $2) && shift 2
+  ru_servers=$(echo -e "${ru_servers}" | tr "\n" ",")
+  ansible -i /tmp/ansible/inventory --connection=${ru_env_cnx} ${ru_servers} -m setup
+}
+
+ru_ansible_fact() {
+  local ru_servers
+  [ "$1" == "-n" ] && ru_servers="-n $2" && shift 2
+  local fact=$1
+  ru_ansible_facts ${ru_servers} | grep "\"${fact}\"" | tr -d '" ,' | cut -d ":" -f 2
+}
+
+### Load virtualization specific library
+
+[ -f lib/role_unit_${ru_env_type} ] && . lib/role_unit_${ru_env_type} || ru_usage
+
+# vim: syntax=sh
