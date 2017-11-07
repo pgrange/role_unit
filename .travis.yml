@@ -15,6 +15,7 @@ addons:
 install:
   - pip install ansible
   - ansible --version
+  - ansible -i localhost, -c local all -m setup
   - docker pull multimediabs/plumb_unit:centos6
   - docker pull multimediabs/plumb_unit:centos7
   - docker pull multimediabs/plumb_unit:debian_jessie
