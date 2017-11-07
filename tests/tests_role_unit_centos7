@@ -1,0 +1,17 @@
+#!/usr/bin/env bash_unit
+
+RU_ENV_IMAGE="multimediabs/plumb_unit:centos7"
+. lib/role_unit
+
+test_environment_is_docker_container_running_centos_7() {
+  assert_equals "CentOS" "$(ru_ansible_fact ansible_distribution)"
+  assert_equals "7" "$(ru_ansible_fact ansible_distribution_major_version)"
+  assert_equals "docker" "$(ru_ansible_fact ansible_virtualization_type)"
+}
+
+setup_suite() {
+  ru_init
+  ru_run_ansible
+}
+
+# vim: syntax=sh
