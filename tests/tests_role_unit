@@ -2,12 +2,12 @@
 
 . lib/role_unit
 
-test_i_have_a_container() {
+test_i_have_a_system_to_connect_to() {
   local server_name=$(ru_servers | head -1)
   assert_equals "${server_name}" "$(ru_run hostname 2>&1)"
 }
 
-test_i_can_make_an_ansible_run_over_my_containers() {
+test_i_can_make_an_ansible_run_over_my_container() {
   ru_run_ansible
 }
 
