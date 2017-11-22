@@ -7,7 +7,7 @@ The goal of this project is to test your ansible system automation. Its goal is 
 
 == prerequisites
 
-* bash_unit
+* https://github.com/pgrange/bash_unit[bash_unit]
 * docker
 * ansible
 
