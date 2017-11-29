@@ -2,7 +2,7 @@
 
 ru_env_name="role_unit"
 ru_env_type="docker"
-ru_env_image="multimediabs/plumb_unit:debian_stretch"
+ru_env_image="debian_stretch"
 ru_count=1
 
 ### User environment
@@ -23,7 +23,13 @@ ru_info() {
 }
 
 ru_usage() {
-  echo "Nope." >&2
+  local txtred='\e[0;31m' # red test
+  local txtrst='\e[0m'    # text reset
+  printf "${txtred}" >&2
+  echo -n "$@" >&2
+  printf "${txtrst}" >&2
+  echo >&2
+  exit 1
 }
 
 ### Servers management functions
@@ -71,6 +77,10 @@ ru_ansible_fact() {
   local fact=$1
   ru_ansible_facts ${ru_servers} | grep "\"${fact}\"" | tr -d '" ,' | cut -d ":" -f 2
 }
+
+### Test interface
+
+[ -z "$RU_ENV_IMAGE" ] && ru_usage "You did not specify an image on which to run tests."
 
 ### Load virtualization specific library
 

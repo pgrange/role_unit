@@ -1,6 +1,6 @@
 #!/usr/bin/env bash_unit
 
-RU_ENV_IMAGE="multimediabs/plumb_unit:centos7"
+RU_ENV_IMAGE="centos7"
 . lib/role_unit
 
 test_environment_is_docker_container_running_centos_7() {

@@ -1,4 +1,12 @@
 ru_env_cnx="docker"
+ru_env_docker_repo="multimediabs/plumb_unit"
+ru_docker_refresh="1 week ago" # if docker images are older than this, they will be refreshed
+
+### User environment
+
+[ -n "$RU_ENV_DOCKER_REPO" ] && ru_env_docker_repo="$RU_ENV_DOCKER_REPO"
+
+### Global functions
 
 declare -A ru_servers_names
 
@@ -12,17 +20,39 @@ ru_destroy() {
   done
 }
 
+ru_pull() {
+  local ru_image_name=$1
+  local ru_image_repo=$(echo ${ru_image_name} | cut -d ":" -f 1)
+  local ru_image_tag=$(echo ${ru_image_name} | cut -d ":" -f 2)
+
+  local ru_image_exists=$(docker images | grep "^${ru_image_repo} *${ru_image_tag} " | wc -l)
+  if [ ${ru_image_exists} -gt 0 ] ; then
+    local ru_image_date=$(docker images | grep "^${ru_image_repo} *${ru_image_tag} " | sed -r 's/^([^ ]+ +){3}//;s/ +[^ ]+$//')
+    local ru_image_epoch=$(date -d "${ru_image_date}" "+%s")
+    local ru_docker_refresh_epoch=$(date -d "${ru_docker_refresh}" "+%s")
+    if [ ${ru_image_epoch} -lt ${ru_docker_refresh_epoch} ] ; then
+      ru_info pulling docker image
+      docker pull ${ru_image_name} >/dev/null 2>&1
+    fi
+  else
+    ru_info pulling docker image
+    docker pull ${ru_image_name} >/dev/null 2>&1
+  fi
+
+  ru_image_exists=$(docker images | grep "^${ru_image_repo} *${ru_image_tag} " | wc -l)
+  [ ${ru_image_exists} -eq 0 ] && ru_usage "unable to pull image (${ru_image_name})"
+}
+
 ru_init() {
   local ru_server
-  ru_info pulling docker image
-  docker pull ${ru_env_image} >/dev/null 2>&1
+  ru_pull ${ru_env_docker_repo}:${ru_env_image}
   for ru_server in $(ru_servers)
   do
     local ru_server_name="${pu_env_name}_$(date +%s)"
     which uuidgen >/dev/null 2>&1 && ru_server_name=$(uuidgen)
     which uuid >/dev/null 2>&1 && ru_server_name=$(uuid)
     ru_info starting container ${ru_server}
-    docker run -d --name=${ru_server_name} --hostname=${ru_server_name} ${ru_env_image} /sbin/init >/dev/null 2>&1
+    docker run -d --name=${ru_server_name} --hostname=${ru_server_name} ${ru_env_docker_repo}:${ru_env_image} /sbin/init >/dev/null 2>&1
     ru_servers_names[${ru_server}]=${ru_server_name}
   done
   trap "ru_destroy" EXIT

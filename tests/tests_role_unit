@@ -11,9 +11,11 @@ test_i_can_make_an_ansible_run_over_my_container() {
   ru_run_ansible
 }
 
-test_default_environment_is_docker_container_running_debian_8() {
-  assert_equals "Debian" "$(ru_ansible_fact ansible_distribution)"
-  assert_equals "9" "$(ru_ansible_fact ansible_distribution_major_version)"
+test_environment_is_docker_container_from_desired_image() {
+  local distribution=$(echo $RU_ENV_IMAGE | sed -r 's/^([^0-9]+)(.*)/\1/')
+  local version=$(echo $RU_ENV_IMAGE | sed -r 's/^([^0-9]+)(.*)/\2/')
+  assert_equals "${distribution}" "$(ru_ansible_fact ansible_distribution | tr '[A-Z]' '[a-z]')"
+  assert_equals "${version}" "$(ru_ansible_fact ansible_distribution_major_version)"
   assert_equals "docker" "$(ru_ansible_fact ansible_virtualization_type)"
 }
 
