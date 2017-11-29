@@ -24,3 +24,4 @@ script:
   - RU_ENV_IMAGE=centos6 tests/bash_unit tests/tests_role_unit
   - RU_ENV_IMAGE=centos7 tests/bash_unit tests/tests_role_unit
   - RU_ENV_IMAGE=debian9 tests/bash_unit tests/tests_role_unit_double
+  - tests/bash_unit tests/tests_run_the_same_twice
