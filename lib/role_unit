@@ -52,8 +52,8 @@ ru_servers() {
 ru_ansible_init() {
   mkdir -p roles
   [ ! -L roles/${ru_env_name} ] && ln -s ../.. roles/${ru_env_name}
-  mkdir -p /tmp/ansible
-  cat > /tmp/ansible/playbook.yml << EOF
+  mkdir -p ${ru_ansible_dir}
+  cat > ${ru_ansible_playbook} << EOF
 - hosts: ${ru_env_name}
   roles:
     - ${ru_env_name}
@@ -61,14 +61,14 @@ EOF
 }
 
 ru_run_ansible() {
-  assert "ansible-playbook --verbose --diff -i /tmp/ansible/inventory --connection=${ru_env_cnx} /tmp/ansible/playbook.yml"
+  assert "ansible-playbook --verbose --diff -i ${ru_ansible_inventory} --connection=${ru_env_cnx} ${ru_ansible_playbook}"
 }
 
 ru_ansible_facts() {
   local ru_server_names=$(ru_server_names)
   [ "$1" == "-n" ] && ru_server_names=$(ru_server_name $2) && shift 2
   ru_server_names=$(echo -e "${ru_server_names}" | tr "\n" ",")
-  ansible -i /tmp/ansible/inventory --connection=${ru_env_cnx} ${ru_server_names} -m setup
+  ansible -i ${ru_ansible_inventory} --connection=${ru_env_cnx} ${ru_server_names} -m setup
 }
 
 ru_ansible_fact() {
@@ -81,6 +81,15 @@ ru_ansible_fact() {
 ### Test interface
 
 [ -z "$RU_ENV_IMAGE" ] && ru_usage "You did not specify an image on which to run tests."
+
+### Set aneible environment
+
+which uuidgen >/dev/null 2>&1 && ru_ansible_id=$(uuidgen)
+which uuid >/dev/null 2>&1 && ru_ansible_id=$(uuid)
+[ -z "${ru_ansible_id}" ] && ru_usage "Unable to get an uuid. Probably neither uuidgen nor uuid is installed."
+ru_ansible_dir=/tmp/ansible/${ru_ansible_id}
+ru_ansible_inventory=${ru_ansible_dir}/inventory
+ru_ansible_playbook=${ru_ansible_dir}/playbook.yml
 
 ### Load virtualization specific library
 
