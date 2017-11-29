@@ -8,6 +8,6 @@ role_unit_dir=$(dirname $0)
 mkdir -p ${role_name}/{tests,tasks}
 touch ${role_name}/tasks/main.yml
 cp ${role_unit_dir}/tools/bash_unit ${role_name}/tests
-cp ${role_unit_dir}/tools/ansible.cfg ${role_name}/tests
-cp ${role_unit_dir}/tools/tests ${role_name}/tests/tests_${role_name}
+[ ! -f ${role_name}/tests/ansible.cfg ] && cp ${role_unit_dir}/tools/ansible.cfg ${role_name}/tests
+[ ! -f ${role_name}/tests/tests_${role_name} ] && cp ${role_unit_dir}/tools/tests ${role_name}/tests/tests_${role_name}
 cp -r ${role_unit_dir}/lib ${role_name}/tests
