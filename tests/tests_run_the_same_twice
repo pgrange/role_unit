@@ -2,12 +2,10 @@
 
 test_i_can_launch_twice_the_same_test() {
   export RU_ENV_IMAGE=debian9
-  test1_output=$(mktemp)
-  test2_output=$(mktemp)
-  ./bash_unit tests_role_unit > ${test1_output} 2>&1 &
-  ./bash_unit tests_role_unit > ${test2_output} 2>&1 &
+  test1_output=$(./bash_unit tests_role_unit 2>&1 &)
+  test2_output=$(./bash_unit tests_role_unit 2>&1 &)
   wait
-  assert_fail "grep FAILURE ${test1_output} ${test2_output}"
+  assert_fail "grep FAILURE <(${test1_output}) <(${test2_output})"
 }
 
 # vim: syntax=sh
