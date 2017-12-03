@@ -18,7 +18,6 @@ install:
 
 script:
   - export PATH=$PATH:.
-  - RU_ENV_IMAGE=debian7 tests/bash_unit tests/tests_role_unit
   - RU_ENV_IMAGE=debian8 tests/bash_unit tests/tests_role_unit
   - RU_ENV_IMAGE=debian9 tests/bash_unit tests/tests_role_unit
   - RU_ENV_IMAGE=centos6 tests/bash_unit tests/tests_role_unit
