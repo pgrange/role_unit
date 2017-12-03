@@ -1,5 +1,5 @@
 ru_env_cnx="docker"
-ru_env_docker_repo="multimediabs/plumb_unit"
+ru_env_docker_repo="registry.gitlab.com/n0vember/role_unit_containers"
 ru_docker_refresh="1 week ago" # if docker images are older than this, they will be refreshed
 
 ### User environment
