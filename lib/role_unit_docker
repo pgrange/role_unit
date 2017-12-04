@@ -27,7 +27,7 @@ ru_pull() {
 
   local ru_image_exists=$(docker images | grep "^${ru_image_repo} *${ru_image_tag} " | wc -l)
   if [ ${ru_image_exists} -gt 0 ] ; then
-    local ru_image_date=$(docker images | grep "^${ru_image_repo} *${ru_image_tag} " | sed -r 's/^([^ ]+ +){3}//;s/ +[^ ]+$//')
+    local ru_image_date=$(docker images | grep "^${ru_image_repo} *${ru_image_tag} " | sed -r 's/^([^ ]+ +){3}//;s/ +[^ ]+$//;s/About an/1/')
     local ru_image_epoch=$(date -d "${ru_image_date}" "+%s")
     local ru_docker_refresh_epoch=$(date -d "${ru_docker_refresh}" "+%s")
     if [ ${ru_image_epoch} -lt ${ru_docker_refresh_epoch} ] ; then
