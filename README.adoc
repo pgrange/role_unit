@@ -59,6 +59,6 @@ Role_unit is tested with role_unit, so preprequisites are the same.
 
 === run
 
-to run the tests, you will have to launch:
+The tests are described in the .travis.yml file.
 
- tests/bash_unit tests/tests*
+To run the tests, you will have to launch the commands in the "script" part of the .travis.yml file.
