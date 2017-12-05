@@ -1,0 +1,47 @@
+image: docker:latest
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DEBIAN_FRONTEND: noninteractive
+
+services:
+- docker:dind
+
+stages:
+  - testing
+
+before_script:
+  - docker info
+  - apk update
+  - apk upgrade
+  - apk add python python-dev py-pip build-base
+  - apk add gcc libffi-dev openssl-dev
+  - apk add bash util-linux
+  - pip install ansible
+
+.distribution_testing: &distribution_testing_definition
+  script:
+    - RU_ENV_IMAGE=${CI_JOB_NAME} tests/bash_unit tests/tests_role_unit
+  stage: testing
+
+debian9:
+  <<: *distribution_testing_definition
+
+debian8:
+  <<: *distribution_testing_definition
+
+centos7:
+  <<: *distribution_testing_definition
+
+centos6:
+  <<: *distribution_testing_definition
+
+double:
+  script:
+    - RU_ENV_IMAGE=debian9 tests/bash_unit tests/tests_role_unit_double
+  stage: testing
+
+twice:
+  script:
+    - RU_ENV_IMAGE=debian9 tests/bash_unit tests/tests_run_the_same_twice
+  stage: testing
