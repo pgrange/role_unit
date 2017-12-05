@@ -8,7 +8,9 @@ services:
 - docker:dind
 
 stages:
-  - testing
+  - images
+  - library
+  - role-init
 
 before_script:
   - docker info
@@ -20,7 +22,7 @@ before_script:
 .distribution_testing: &distribution_testing_definition
   script:
     - RU_ENV_IMAGE=${CI_JOB_NAME} tests/bash_unit tests/tests_role_unit
-  stage: testing
+  stage: images
 
 debian9:
   <<: *distribution_testing_definition
@@ -37,14 +39,14 @@ centos6:
 multiplicity:
   script:
     - RU_ENV_IMAGE=debian9 tests/bash_unit tests/tests_role_unit_double
-  stage: testing
+  stage: library
 
 simultaneity:
   script:
     - tests/bash_unit tests/tests_run_the_same_twice
-  stage: testing
+  stage: library
 
 role_init:
   script:
     - tests/bash_unit tests/tests_role_init
-  stage: testing
+  stage: role-init
