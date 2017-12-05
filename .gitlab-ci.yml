@@ -45,3 +45,8 @@ twice:
   script:
     - RU_ENV_IMAGE=debian9 tests/bash_unit tests/tests_run_the_same_twice
   stage: testing
+
+role_init:
+  script:
+    - tests/bash_unit tests/tests_role_init
+  stage: testing

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash_unit
+
+tmp_dir=/tmp/role_init_testing_dir
+tst_role_name=ru_tst
+role_dir=
+role_init_dir=
+
+test_role_init_creates_the_role_directory() {
+  assert "test -d ${role_dir}/${tst_role_name}"
+}
+
+test_i_can_actually_launch_the_tests() {
+  export RU_ENV_IMAGE=debian9
+  test_output=$(${role_dir}/${tst_role_name}/tests/bash_unit ${role_dir}/${tst_role_name}/tests/tests_${tst_role_name} 2>&1 &)
+  wait
+  success_result=$(grep 'Running test_that_succeeds... SUCCESS' <(echo -e "${test_output}") | wc -l)
+  failing_result=$(grep 'Running test_that_fails... FAILURE' <(echo -e "${test_output}") | wc -l)
+  assert_equals "1" "${success_result}"
+  assert_equals "1" "${failing_result}"
+}
+
+setup() {
+  mkdir -p ${tmp_dir}
+  role_dir=$(mktemp -d -p ${tmp_dir})
+  role_init_dir=$(dirname $PWD)
+  (cd ${role_dir} ; ${role_init_dir}/role_init ${tst_role_name})
+}
+
+teardown() {
+  rm -r ${tmp_dir}
+}
+
+# vim: syntax=sh
