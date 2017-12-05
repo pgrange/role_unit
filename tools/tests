@@ -1,5 +1,11 @@
 #!/usr/bin/env bash_unit
 
+# You must specify an image on wich to run your tests using RU_ENV_IMAGE variable.
+# It is done either here :
+# RU_ENV_IMAGE=debian9
+# RU_ENV_IMAGE=centos7
+# Or as environment variable in the shell launching the tests
+
 . lib/role_unit
 
 test_that_fails() {
