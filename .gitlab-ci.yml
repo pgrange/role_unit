@@ -36,12 +36,12 @@ centos7:
 centos6:
   <<: *distribution_testing_definition
 
-double:
+multiplicity:
   script:
     - RU_ENV_IMAGE=debian9 tests/bash_unit tests/tests_role_unit_double
   stage: testing
 
-twice:
+simultaneity:
   script:
     - tests/bash_unit tests/tests_run_the_same_twice
   stage: testing
