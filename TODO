@@ -10,5 +10,5 @@ x = canceled
 New ideas are added on top of the list and are sometimes reordered.
 
 ... define push strategy (gitlab+github)
-... have testing image instead of before_script
+>>> have testing image instead of before_script
 vvv organise tests in groups : images, library, role_init
