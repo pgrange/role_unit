@@ -12,5 +12,7 @@ touch ${role_name}/tasks/main.yml
 cp ${role_unit_dir}/tools/bash_unit ${role_name}/tests
 [ ! -f ${role_name}/tests/ansible.cfg ] && cp ${role_unit_dir}/tools/ansible.cfg ${role_name}/tests
 [ ! -f ${role_name}/tests/tests_${role_name} ] && cp ${role_unit_dir}/tools/tests ${role_name}/tests/tests_${role_name}
-[ ! -f ${role_name}/meta/main.yml ] && echo "dependencies: []" > ${role_name}/meta/main.yml
 cp -r ${role_unit_dir}/lib ${role_name}/tests
+
+[ ! -d ${role_name}/meta ] && mkdir ${role_name}/meta
+[ ! -f ${role_name}/meta/main.yml ] && echo "dependencies: []" > ${role_name}/meta/main.yml
