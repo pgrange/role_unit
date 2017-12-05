@@ -1,5 +1,4 @@
-Build status :
-image:https://travis-ci.org/n0vember/role_unit.svg?branch=master[Build Status,link=https://travis-ci.org/n0vember/role_unit]
+image:https://gitlab.com/n0vember/role_unit/badges/master/pipeline.svg[link="https://gitlab.com/n0vember/role_unit/commits/master",title="pipeline status"]
 
 = role_unit
 
