@@ -5,7 +5,7 @@ test_i_can_launch_twice_the_same_test() {
   test1_output=$(./bash_unit tests_role_unit 2>&1 &)
   test2_output=$(./bash_unit tests_role_unit 2>&1 &)
   wait
-  assert_fail "grep FAILURE <(${test1_output}) <(${test2_output})"
+  assert_fail "grep FAILURE <(echo -e "${test1_output}") <(echo -e "${test2_output}")"
 }
 
 # vim: syntax=sh
