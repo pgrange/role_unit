@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+[ $# -ne 1 ] && exit 1
+
 role_dir=$(pwd)
 role_name=$1
 
