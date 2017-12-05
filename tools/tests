@@ -12,6 +12,10 @@ test_that_fails() {
   assert "ru_run false"
 }
 
+test_that_succeeds() {
+  assert "ru_run true"
+}
+
 setup_suite() {
   ru_init
   ru_run_ansible
