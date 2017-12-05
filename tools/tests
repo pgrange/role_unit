@@ -3,7 +3,7 @@
 . lib/role_unit
 
 test_that_fails() {
-  assert "ru_run true"
+  assert "ru_run false"
 }
 
 setup_suite() {
