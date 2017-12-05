@@ -14,10 +14,8 @@ before_script:
   - docker info
   - apk update
   - apk upgrade
-  - apk add python python-dev py-pip build-base
-  - apk add gcc libffi-dev openssl-dev
   - apk add bash util-linux
-  - pip install ansible
+  - apk add python ansible
 
 .distribution_testing: &distribution_testing_definition
   script:
