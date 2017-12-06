@@ -9,6 +9,9 @@ x = canceled
 
 New ideas are added on top of the list and are sometimes reordered.
 
+... role_init - must refacto script
+   ... usage function
+   ... check parameters
 ... define push strategy (gitlab+github)
->>> have testing image instead of before_script
+vvv have testing image instead of before_script
 vvv organise tests in groups : images, library, role_init
