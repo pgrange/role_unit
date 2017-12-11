@@ -16,7 +16,7 @@ To create a new role tested with role_unit, place yourself in the directory wher
 
 ----
 cd /my/ansible/dir/roles
-/path/to/role_unit my_role
+/path/to/role_init my_role
 ----
 
 This will create an empty role with the testing tools in the tests directory. A default tests file is created that run on the default container (debian9). To adapt the used distribution set the RU_ENV_IMAGE variable (see below).
@@ -45,10 +45,21 @@ Returns the specified ansible fact for all of the servers or just on the one spe
 
 == parameters
 
-Plumb_unit behaviour can be changed using environment variables:
+there is only one mandatory environment variable, which is RU_ENV_IMAGE. It defines the linux flavor you will run your tests against. Default configuration pulls docker images from role_unit containers repository (registry.gitlab.com/n0vember/role_unit_containers). Actually, you can choose among :
+* debian 9 (stretch)
+* debian 8 (jessie)
+* centos 7
+* centos 6
+
+role_unit behaviour can be changed using environment variables:
 * RU_ENV_NAME defines the testing environment name. It is the name of the role you will test.
+* RU_ENV_DOCKER_REPO defines the docker repository to pull images from.
 * RU_ENV_IMAGE defines the system image used to create test environment.
 * RU_COUNT sets the number of containers or virtual machines
+
+== about namespace
+
+Role unit functions are prefixed by ru_. Role_unit environment variables for configuration are prefixed by RU_. Internal variables are prefixed with ru_. We keep it that way to minimize impact on tested environment.
 
 == tests
 
@@ -58,6 +69,6 @@ Role_unit is tested with role_unit, so preprequisites are the same.
 
 === run
 
-The tests are described in the .travis.yml file.
+The tests are described in the .gitlab-ci.yml file.
 
-To run the tests, you will have to launch the commands in the "script" part of the .travis.yml file.
+To run the tests, you will have to launch the commands in the "script" part of the .gitlab-ci.yml file.
