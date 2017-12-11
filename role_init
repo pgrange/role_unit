@@ -13,7 +13,9 @@ usage() {
 role_dir=$(pwd)
 role_name=$1
 
-role_unit_dir=$(dirname $(readlink -e $0))
+readlink_opt="-e"
+readlink ${readlink_opt} / >/dev/null 2>&1 || readlink_opt="-f"
+role_unit_dir=$(dirname $(readlink ${readlink_opt) $0))
 
 mkdir -p ${role_name}/{tests,tasks}
 touch ${role_name}/tasks/main.yml
