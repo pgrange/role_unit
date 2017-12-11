@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
-[ $# -ne 1 ] && exit 1
+usage() {
+  my_name=$(basename $0)
+  [ $# -gt 0 ] && echo "$@" >&2
+  echo "usage : ${my_name} ROLE_NAME
+  creates a ROLE_NAME directory in the current directory, with a dummy role and unit tests embeded" >&2
+  exit 1
+}
+
+[ $# -ne 1 ] && usage "role name is mandatory"
 
 role_dir=$(pwd)
 role_name=$1
