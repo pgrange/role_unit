@@ -2,7 +2,7 @@
 
 ru_env_name="role_unit"
 ru_env_type="docker"
-ru_env_image="debian_stretch"
+ru_env_image="debian9"
 ru_count=1
 
 ### User environment
