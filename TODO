@@ -9,8 +9,9 @@ x = canceled
 
 New ideas are added on top of the list and are sometimes reordered.
 
-... role_init - must refacto script
-   ... usage function
+>>> role_init - must refacto script
+   vvv usage function
+   vvv role_init can work as a link (installation easier)
    ... check parameters
 ... define push strategy (gitlab+github)
 vvv have testing image instead of before_script
