@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Functions
 usage() {
   my_name=$(basename $0)
   [ $# -gt 0 ] && echo "$@" >&2
@@ -8,21 +9,40 @@ usage() {
   exit 1
 }
 
-[ $# -ne 1 ] && usage "role name is mandatory"
+create_an_ansible_role() {
+  local role_name=$1
+  # Create empty role
+  mkdir -p ${role_name}/tasks
+  touch ${role_name}/tasks/main.yml
+  # Dependencies to make role usable by ansible-galaxy
+  [ ! -d ${role_name}/meta ] && mkdir ${role_name}/meta
+  [ ! -f ${role_name}/meta/main.yml ] && echo "dependencies: []" > ${role_name}/meta/main.yml
+}
 
-role_dir=$(pwd)
-role_name=$1
+make_directory_testable() {
+  local role_name=$1
+  # Testing environment
+  mkdir -p ${role_name}/tests
+  cp ${role_unit_dir}/tools/bash_unit ${role_name}/tests
+  cp -r ${role_unit_dir}/lib ${role_name}/tests
+  [ ! -f ${role_name}/tests/ansible.cfg ] && cp ${role_unit_dir}/tools/ansible.cfg ${role_name}/tests
+  [ ! -f ${role_name}/tests/tests_${role_name} ] && cp ${role_unit_dir}/tools/tests ${role_name}/tests/tests_${role_name}
+}
 
+# Check parameters
+[ $# -lt 1 ] && usage "role name is mandatory"
+
+# Set readlink option. -e is not available on all systems
 readlink_opt="-e"
 readlink ${readlink_opt} / >/dev/null 2>&1 || readlink_opt="-f"
+
+# determine where we create dir and where script really is
+role_dir=$(pwd)
 role_unit_dir=$(dirname $(readlink ${readlink_opt} $0))
 
-mkdir -p ${role_name}/{tests,tasks}
-touch ${role_name}/tasks/main.yml
-cp ${role_unit_dir}/tools/bash_unit ${role_name}/tests
-[ ! -f ${role_name}/tests/ansible.cfg ] && cp ${role_unit_dir}/tools/ansible.cfg ${role_name}/tests
-[ ! -f ${role_name}/tests/tests_${role_name} ] && cp ${role_unit_dir}/tools/tests ${role_name}/tests/tests_${role_name}
-cp -r ${role_unit_dir}/lib ${role_name}/tests
-
-[ ! -d ${role_name}/meta ] && mkdir ${role_name}/meta
-[ ! -f ${role_name}/meta/main.yml ] && echo "dependencies: []" > ${role_name}/meta/main.yml
+while [ $# -ge 1 ]
+do
+  create_an_ansible_role $1
+  make_directory_testable $1
+  shift
+done

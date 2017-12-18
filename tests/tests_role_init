@@ -1,33 +1,52 @@
 #!/usr/bin/env bash_unit
 
-tmp_dir=/tmp/role_init_testing_dir
-tst_role_name=ru_tst
-role_dir=
-role_init_dir=
+tmp_dir=/tmp/role_init_testing_dir_${RANDOM}
+role_init_dir=$(dirname $PWD)
 
 test_role_init_creates_the_role_directory() {
-  assert "test -d ${role_dir}/${tst_role_name}"
+  # create a role
+  local tst_role_name=ru_tst
+  (cd ${tmp_dir} ; ${role_init_dir}/role_init ${tst_role_name})
+  # check role has been created
+  assert "test -d ${tmp_dir}/${tst_role_name}"
 }
 
 test_i_can_actually_launch_the_tests() {
-  export RU_ENV_IMAGE=debian9
-  test_output=$(${role_dir}/${tst_role_name}/tests/bash_unit ${role_dir}/${tst_role_name}/tests/tests_${tst_role_name} 2>&1 &)
-  wait
-  success_result=$(grep 'Running test_that_succeeds... SUCCESS' <(echo -e "${test_output}") | wc -l)
-  failing_result=$(grep 'Running test_that_fails... FAILURE' <(echo -e "${test_output}") | wc -l)
-  assert_equals "1" "${success_result}"
-  assert_equals "1" "${failing_result}"
+  # create a role
+  local tst_role_name=ru_tst
+  (cd ${tmp_dir} ; ${role_init_dir}/role_init ${tst_role_name})
+  # test it
+  role_test_by_name ${tst_role_name}
+}
+
+test_i_can_create_two_roles_at_once() {
+  # create two roles
+  local role_prefix=ru_tst
+  (cd ${tmp_dir} ; ${role_init_dir}/role_init ${tst_role_name}_1 ${tst_role_name}_2)
+  # test them
+  role_test_by_name ${tst_role_name}_1
+  role_test_by_name ${tst_role_name}_2
 }
 
 setup() {
   mkdir -p ${tmp_dir}
-  role_dir=$(mktemp -d -p ${tmp_dir})
-  role_init_dir=$(dirname $PWD)
-  (cd ${role_dir} ; ${role_init_dir}/role_init ${tst_role_name})
 }
 
 teardown() {
   rm -r ${tmp_dir}
+}
+
+role_test_by_name() {
+  local role_name=$1
+  # launch tests
+  export RU_ENV_IMAGE=debian9
+  local test_output=$(${tmp_dir}/${role_name}/tests/bash_unit ${tmp_dir}/${role_name}/tests/tests_${role_name} 2>&1 &)
+  wait
+  local success_result=$(grep 'Running test_that_succeeds... SUCCESS' <(echo -e "${test_output}") | wc -l)
+  local failing_result=$(grep 'Running test_that_fails... FAILURE' <(echo -e "${test_output}") | wc -l)
+  # check result
+  assert_equals "1" "${success_result}"
+  assert_equals "1" "${failing_result}"
 }
 
 # vim: syntax=sh
