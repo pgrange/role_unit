@@ -50,9 +50,18 @@ ru_servers() {
 ### Ansible management functions
 
 ru_ansible_init() {
-  mkdir -p roles
-  [ ! -L roles/${ru_env_name} ] && ln -s ../.. roles/${ru_env_name}
-  mkdir -p ${ru_ansible_dir}
+  which uuidgen >/dev/null 2>&1 && ru_ansible_id=$(uuidgen)
+  which uuid >/dev/null 2>&1 && ru_ansible_id=$(uuid)
+  [ -z "${ru_ansible_id}" ] && ru_usage "Unable to get an uuid. Probably neither uuidgen nor uuid is installed."
+  ru_ansible_dir=/tmp/ansible/${ru_ansible_id}
+  ru_ansible_inventory=${ru_ansible_dir}/inventory
+  ru_ansible_playbook=${ru_ansible_dir}/playbook.yml
+  ru_ansible_roledir=${ru_ansible_dir}/roles
+
+  mkdir -p ${ru_ansible_roledir}
+  [ ! -L ${ru_ansible_roledir}/${ru_env_name} ] && ln -s ../.. ${ru_ansible_roledir}/${ru_env_name}
+  [ ! -L ${ru_ansible_dir}/group_vars ] && ln -s group_vars ${ru_ansible_roledir}
+
   cat > ${ru_ansible_playbook} << EOF
 - hosts: ${ru_env_name}
   roles:
@@ -82,14 +91,9 @@ ru_ansible_fact() {
 
 [ -z "$RU_ENV_IMAGE" ] && ru_usage "You did not specify an image on which to run tests."
 
-### Set aneible environment
+### Set ansible environment
 
-which uuidgen >/dev/null 2>&1 && ru_ansible_id=$(uuidgen)
-which uuid >/dev/null 2>&1 && ru_ansible_id=$(uuid)
-[ -z "${ru_ansible_id}" ] && ru_usage "Unable to get an uuid. Probably neither uuidgen nor uuid is installed."
-ru_ansible_dir=/tmp/ansible/${ru_ansible_id}
-ru_ansible_inventory=${ru_ansible_dir}/inventory
-ru_ansible_playbook=${ru_ansible_dir}/playbook.yml
+export ru_ansible_id ru_ansible_dir ru_ansible_inventory ru_ansible_playbook ru_ansible_roledir
 
 ### Load virtualization specific library
 

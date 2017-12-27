@@ -1,4 +1,4 @@
-image:https://gitlab.com/n0vember/role_unit/badges/master/pipeline.svg[link="https://gitlab.com/n0vember/role_unit/commits/master",title="pipeline status"]
+image:https://gitlab.com/role_unit/role_unit/badges/master/pipeline.svg[link="https://gitlab.com/role_unit/role_unit/commits/master",title="pipeline status"]
 
 = role_unit
 
@@ -45,7 +45,7 @@ Returns the specified ansible fact for all of the servers or just on the one spe
 
 == parameters
 
-there is only one mandatory environment variable, which is RU_ENV_IMAGE. It defines the linux flavor you will run your tests against. Default configuration pulls docker images from role_unit containers repository (registry.gitlab.com/n0vember/role_unit_containers). Actually, you can choose among :
+there is only one mandatory environment variable, which is RU_ENV_IMAGE. It defines the linux flavor you will run your tests against. Default configuration pulls docker images from role_unit containers repository (registry.gitlab.com/role_unit/role_unit_containers). Actually, you can choose among :
 * debian 9 (stretch)
 * debian 8 (jessie)
 * centos 7

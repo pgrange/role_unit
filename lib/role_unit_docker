@@ -1,5 +1,5 @@
 ru_env_cnx="docker"
-ru_env_docker_repo="registry.gitlab.com/n0vember/role_unit_containers"
+ru_env_docker_repo="registry.gitlab.com/role_unit/role_unit_containers"
 ru_docker_refresh="1 week ago" # if docker images are older than this, they will be refreshed
 
 ### User environment
@@ -56,12 +56,11 @@ ru_init() {
     ru_servers_names[${ru_server}]=${ru_server_name}
   done
   trap "ru_destroy" EXIT
-  mkdir -p ${ru_ansible_dir}
+  ru_ansible_init
   echo "[${ru_env_name}]" > ${ru_ansible_inventory}
   for ru_server in $(ru_servers) ; do
     echo ${ru_servers_names[${ru_server}]}
   done >> ${ru_ansible_inventory}
-  ru_ansible_init
 }
 
 ru_run() {
