@@ -1,4 +1,4 @@
-image: registry.gitlab.com/n0vember/role_unit_containers:build
+image: registry.gitlab.com/role_unit/role_unit_containers:build
 
 variables:
   DOCKER_DRIVER: overlay2
