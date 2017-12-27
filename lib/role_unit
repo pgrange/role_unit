@@ -59,8 +59,8 @@ ru_ansible_init() {
   ru_ansible_roledir=${ru_ansible_dir}/roles
 
   mkdir -p ${ru_ansible_roledir}
-  [ ! -L ${ru_ansible_roledir}/${ru_env_name} ] && ln -s ../.. ${ru_ansible_roledir}/${ru_env_name}
-  [ ! -L ${ru_ansible_dir}/group_vars ] && ln -s group_vars ${ru_ansible_roledir}
+  [ ! -L ${ru_ansible_roledir}/${ru_env_name} ] && ln -s $PWD/.. ${ru_ansible_roledir}/${ru_env_name}
+  [ -d group_vars -a ! -L ${ru_ansible_dir}/group_vars ] && ln -s $PWD/group_vars ${ru_ansible_dir}/group_vars
 
   cat > ${ru_ansible_playbook} << EOF
 - hosts: ${ru_env_name}
@@ -71,6 +71,10 @@ EOF
 
 ru_run_ansible() {
   assert "ansible-playbook --verbose --diff -i ${ru_ansible_inventory} --connection=${ru_env_cnx} ${ru_ansible_playbook}"
+}
+
+ru_run_ansible_module() {
+  ansible --verbose --diff -i ${ru_ansible_inventory} --connection=${ru_env_cnx} all $@
 }
 
 ru_ansible_facts() {

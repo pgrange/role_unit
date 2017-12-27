@@ -19,6 +19,11 @@ test_environment_is_docker_container_from_desired_image() {
   assert_equals "docker" "$(ru_ansible_fact ansible_virtualization_type)"
 }
 
+test_group_vars_is_seen() {
+  assert "ru_run_ansible_module -m debug -a var=this_is_a_testing_variable | grep '\"this_is_a_testing_variable\": \"the desired value\"'"
+  assert "ru_run_ansible_module -m debug -a var=there_is_no_such_thing_as_this_variable | grep '\"there_is_no_such_thing_as_this_variable\": \"VARIABLE IS NOT DEFINED!\"'"
+}
+
 setup_suite() {
   ru_init
   ru_run_ansible
