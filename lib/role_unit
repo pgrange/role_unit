@@ -60,7 +60,7 @@ ru_ansible_init() {
 
   mkdir -p ${ru_ansible_roledir}
   [ ! -L ${ru_ansible_roledir}/${ru_env_name} ] && ln -s $PWD/.. ${ru_ansible_roledir}/${ru_env_name}
-  [ -d group_vars -a ! -L ${ru_ansible_dir}/group_vars ] && ln -s $PWD/group_vars ${ru_ansible_roledir}/group_vars
+  [ -d group_vars -a ! -L ${ru_ansible_dir}/group_vars ] && ln -s $PWD/group_vars ${ru_ansible_dir}/group_vars
 
   cat > ${ru_ansible_playbook} << EOF
 - hosts: ${ru_env_name}
