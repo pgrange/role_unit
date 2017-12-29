@@ -1,10 +1,12 @@
 ru_env_cnx="docker"
 ru_env_docker_repo="registry.gitlab.com/role_unit/role_unit_containers"
 ru_docker_refresh="1 week ago" # if docker images are older than this, they will be refreshed
+ru_debug=0
 
 ### User environment
 
 [ -n "$RU_ENV_DOCKER_REPO" ] && ru_env_docker_repo="$RU_ENV_DOCKER_REPO"
+[ -n "$RU_DEBUG" ] && ru_debug="$RU_DEBUG"
 
 ### Global functions
 
@@ -55,7 +57,13 @@ ru_init() {
     docker run -d --privileged --name=${ru_server_name} --hostname=${ru_server_name} ${ru_env_docker_repo}:${ru_env_image} >/dev/null 2>&1
     ru_servers_names[${ru_server}]=${ru_server_name}
   done
-  trap "ru_destroy" EXIT
+  if [ ${ru_debug} -ne 1 ] ; then
+    trap "ru_destroy" EXIT
+  else
+    ru_info debug mode activated
+    ru_info you will have to drop those containers manually :
+    ru_info $(ru_server_names | xargs echo docker rm -f)
+  fi
   ru_ansible_init
   echo "[${ru_env_name}]" > ${ru_ansible_inventory}
   for ru_server in $(ru_servers) ; do
